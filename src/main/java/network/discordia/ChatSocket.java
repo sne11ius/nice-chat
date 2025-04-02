@@ -9,6 +9,7 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -48,9 +49,10 @@ public class ChatSocket
 
     private void broadcast(String message)
     {
+        String actualMessage = preprocessMessage(message);
         sessions.values().forEach(session ->
         {
-            session.getAsyncRemote().sendObject(message, result ->
+            session.getAsyncRemote().sendObject(actualMessage, result ->
             {
                 if (result.getException() != null)
                 {
@@ -58,5 +60,18 @@ public class ChatSocket
                 }
             });
         });
+    }
+
+    String preprocessMessage(String message)
+    {
+        Map<String, String> mapping = new HashMap<>();
+        mapping.put(":heart:", "❤️");
+        mapping.put(":rocket:", "\uD83D\uDE80");
+        mapping.put("13256278887989457651018865901401704640", "[redacted]");
+        for (Map.Entry<String, String> entry : mapping.entrySet())
+        {
+            message = message.replace(entry.getKey(), entry.getValue());
+        }
+        return message;
     }
 }
