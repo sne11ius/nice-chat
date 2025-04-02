@@ -12,29 +12,48 @@
     <div id="isempty">[Keine Nachrichten]</div>
 </section>
 
-<label for="message">Nachricht:</label>
-<input type="text" id="message-input">
-<button id="submit">Absenden</button>
+<section>
+    <label for="username">Name:</label>
+    <input type="text" id="username">
+    <button id="start">Start!</button>
+</section>
+
+<section>
+    <label for="message-input">Nachricht:</label>
+    <input type="text" id="message-input" disabled>
+    <button id="submit" disabled>Absenden</button>
+</section>
 
 <script>
-    const protocol = location.protocol.replace('http', 'ws')
-    const socket = new WebSocket(protocol + "//" + location.host + '/chat');
-    socket.onmessage = (message) => {
-        const newElement = document.createElement('div')
-        newElement.textContent = message.data
-        const messageContainer = document.getElementById('messages')
-        messageContainer.appendChild(newElement)
-        const empty = document.getElementById('isempty')
-        if (empty) {
-            empty.remove()
+    const startButton = document.getElementById('start')
+    startButton.onclick = () => {
+        const usernameInput = document.getElementById('username')
+        const username = usernameInput.value
+        if (username === '') {
+            alert('Benutzername fehlt')
+            return
         }
-    }
+        const protocol = location.protocol.replace('http', 'ws')
+        const socket = new WebSocket(protocol + "//" + location.host + '/chat/' + username);
+        socket.onmessage = (message) => {
+            const newElement = document.createElement('div')
+            newElement.textContent = message.data
+            const messageContainer = document.getElementById('messages')
+            messageContainer.appendChild(newElement)
+            const empty = document.getElementById('isempty')
+            if (empty) {
+                empty.remove()
+            }
+        }
 
-    const button = document.getElementById('submit')
-    button.onclick = () => {
+        const button = document.getElementById('submit')
+        button.removeAttribute('disabled')
         const input = document.getElementById('message-input')
-        const messageText = input.value
-        socket.send(messageText)
+        input.removeAttribute('disabled')
+        button.onclick = () => {
+            const messageText = input.value
+            socket.send(messageText)
+        }
     }
 </script>
 </html>
