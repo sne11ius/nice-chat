@@ -1,20 +1,25 @@
 # nice
 
-A nice chat app with java/html/js/css. Powered by quarkus.
+A small but nice chat app built with Java, HTML, JS, and CSS — powered by Quarkus.
 
-## Running the application in dev mode
+## 🚀 Demo
 
-You can run your application in dev mode that enables live coding using:
+Try it out: [chat.discordia.network](https://chat.discordia.network)
 
-```shell script
+## 🛠️ Development
+
+Run in dev mode with live coding support:
+
+```bash
 ./mvnw quarkus:dev
 ```
 
-## Deployment
+## 🚚 Deployment
 
-Don't worry, github actions will do it for you
+No worries — it's all handled by GitHub Actions.
 
-## License
+## 📄 License
 
 Licensed under EUPL-1.2
+
 See [LICENSE](LICENSE)
