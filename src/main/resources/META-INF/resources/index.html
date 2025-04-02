@@ -40,6 +40,7 @@
             newElement.textContent = message.data
             const messageContainer = document.getElementById('messages')
             messageContainer.appendChild(newElement)
+            messageContainer.scrollTop = messageContainer.scrollHeight
             const empty = document.getElementById('isempty')
             if (empty) {
                 empty.remove()
