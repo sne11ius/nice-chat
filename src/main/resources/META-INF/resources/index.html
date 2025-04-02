@@ -50,9 +50,16 @@
         button.removeAttribute('disabled')
         const input = document.getElementById('message-input')
         input.removeAttribute('disabled')
-        button.onclick = () => {
+        const submit = () => {
             const messageText = input.value
+            input.value = ''
             socket.send(messageText)
+        }
+        button.onclick = submit
+        input.onkeyup = ({key}) => {
+            if (key === 'Enter') {
+                submit()
+            }
         }
     }
 </script>
