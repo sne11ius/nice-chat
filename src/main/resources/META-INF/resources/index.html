@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>nice chat</title>
+    <link type="text/css" href="index.css" rel="stylesheet">
+</head>
+
+<img src="nice-chat-logo.png">
+
+<section id="messages">
+    <div id="isempty">[Keine Nachrichten]</div>
+</section>
+
+<label for="message">Nachricht:</label>
+<input type="text" id="message-input">
+<button id="submit">Absenden</button>
+
+<script>
+    const protocol = location.protocol.replace('http', 'ws')
+    const socket = new WebSocket(protocol + "//" + location.host + '/chat');
+    socket.onmessage = (message) => {
+        const newElement = document.createElement('div')
+        newElement.textContent = message.data
+        const messageContainer = document.getElementById('messages')
+        messageContainer.appendChild(newElement)
+        const empty = document.getElementById('isempty')
+        if (empty) {
+            empty.remove()
+        }
+    }
+
+    const button = document.getElementById('submit')
+    button.onclick = () => {
+        const input = document.getElementById('message-input')
+        const messageText = input.value
+        socket.send(messageText)
+    }
+</script>
+</html>
