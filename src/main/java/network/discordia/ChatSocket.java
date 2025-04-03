@@ -6,12 +6,13 @@ import jakarta.websocket.OnError;
 import jakarta.websocket.OnMessage;
 import jakarta.websocket.OnOpen;
 import jakarta.websocket.Session;
+import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-@ServerEndpoint("/chat")
+@ServerEndpoint("/chat/{username}")
 @ApplicationScoped
 public class ChatSocket
 {
@@ -19,30 +20,30 @@ public class ChatSocket
     List<Session> sessions = new CopyOnWriteArrayList<>();
 
     @OnOpen
-    public void onOpen(Session session)
+    public void onOpen(Session session, @PathParam("username") String username)
     {
-        broadcast("New user joined, say hello!");
+        broadcast("New user " + username + " joined, say hello!");
         sessions.add(session);
     }
 
     @OnClose
-    public void onClose(Session session)
+    public void onClose(Session session, @PathParam("username") String username)
     {
         sessions.remove(session);
-        broadcast("User left");
+        broadcast("User left " + username);
     }
 
     @OnError
-    public void onError(Session session, Throwable throwable)
+    public void onError(Session session, Throwable throwable, @PathParam("username") String username)
     {
         sessions.remove(session);
-        broadcast("User left on error: " + throwable);
+        broadcast("User " + username + " left on error: " + throwable);
     }
 
     @OnMessage
-    public void conMessage(String message)
+    public void onMessage(String message, @PathParam("username") String username)
     {
-        broadcast(">> " + message);
+        broadcast(">> " + username + "<br>" + message);
     }
 
     private void broadcast(String message)
