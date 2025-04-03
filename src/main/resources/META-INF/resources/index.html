@@ -26,13 +26,11 @@
     const startbutton = document.getElementById('start')
     startbutton.onclick = () => {
         const input = document.getElementById('username-input')
-        const usernameText = input.value
-        if (usernameText.length === 0) {
+        const username = input.value
+        if (username.length === 0) {
             return
         }
-        console.log(usernameText)
         const protocol = location.protocol.replace('http', 'ws')
-        const username = usernameText
         const socket = new WebSocket(protocol + "//" + location.host + '/chat/' + username);
         socket.onmessage = (message) => {
             const newElement = document.createElement('div')

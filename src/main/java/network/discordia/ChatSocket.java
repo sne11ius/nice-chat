@@ -1,5 +1,6 @@
 package network.discordia;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnError;
@@ -9,8 +10,13 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @ServerEndpoint("/chat/{username}")
 @ApplicationScoped
@@ -18,6 +24,27 @@ public class ChatSocket
 {
 
     List<Session> sessions = new CopyOnWriteArrayList<>();
+
+    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
+    @PostConstruct
+    private void runPing()
+    {
+        executor.scheduleAtFixedRate(() ->
+        {
+            sessions.forEach(session ->
+            {
+                try
+                {
+                    ByteBuffer payload = ByteBuffer.wrap("ping".getBytes());
+                    session.getAsyncRemote().sendPing(payload);
+                } catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            });
+        }, 30, 30, TimeUnit.SECONDS);
+    }
 
     @OnOpen
     public void onOpen(Session session, @PathParam("username") String username)
