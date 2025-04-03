@@ -1,7 +1,8 @@
 #messages {
     border: 3px solid lightgray;
     border-radius: 5px;
-    height: 100%;
+    height: 300px;
+    overflow: scroll;
 }
 
 #messages div:nth-of-type(2n+1) {

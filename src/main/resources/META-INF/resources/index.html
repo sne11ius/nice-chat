@@ -12,7 +12,7 @@
     <div id="isempty">[Keine Nachrichten]</div>
 </section>
 
-<label for="message">Nachricht:</label>
+<label for="message-input">Nachricht:</label>
 <input type="text" id="message-input">
 <button id="submit">Absenden</button>
 
@@ -24,6 +24,7 @@
         newElement.textContent = message.data
         const messageContainer = document.getElementById('messages')
         messageContainer.appendChild(newElement)
+        messageContainer.scrollTop = messageContainer.scrollHeight
         const empty = document.getElementById('isempty')
         if (empty) {
             empty.remove()
