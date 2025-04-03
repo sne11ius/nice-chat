@@ -19,8 +19,8 @@
 </section>
 <section>
     <label for="message-input">Nachricht:</label>
-    <input type="text" id="message-input">
-    <button id="submit">Absenden</button>
+    <input type="text" id="message-input" disabled>
+    <button id="submit" disabled>Absenden</button>
 </section>
 <script>
     const startbutton = document.getElementById('start')
@@ -30,6 +30,8 @@
         if (username.length === 0) {
             return
         }
+        input.setAttribute("disabled", "disabled")
+        startbutton.setAttribute("disabled", "disabled")
         const protocol = location.protocol.replace('http', 'ws')
         const socket = new WebSocket(protocol + "//" + location.host + '/chat/' + username);
         socket.onmessage = (message) => {
@@ -45,9 +47,11 @@
         }
 
         const button = document.getElementById('submit')
+        button.removeAttribute("disabled")
+        const messageInput = document.getElementById('message-input')
+        messageInput.removeAttribute("disabled")
         button.onclick = () => {
-            const input = document.getElementById('message-input')
-            const messageText = input.value
+            const messageText = messageInput.value
             socket.send(messageText)
         }
     }
