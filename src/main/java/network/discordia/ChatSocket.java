@@ -47,9 +47,12 @@ public class ChatSocket
 
     private void broadcast(String message)
     {
+        String echteNachricht = message;
+        echteNachricht = echteNachricht.replace(":heart:", "\u2764\uFE0F");
+        final String finaleNachricht = echteNachricht;
         sessions.forEach(s ->
         {
-            s.getAsyncRemote().sendObject(message, result ->
+            s.getAsyncRemote().sendObject(finaleNachricht, result ->
             {
                 if (result.getException() != null)
                 {
